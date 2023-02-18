@@ -70,7 +70,7 @@ function change_robots_text(type, checked) {
         value = "# Block Majestic Crawler\nUser-agent: MJ12bot\nDisallow: /";
         break;
       case "advancedrobotstxtoptimizer_block_xenu":
-        value = "# Block Xenu Crawler\nUser-agent: Xenu\nDisallow: /\nUser-agent: Xenu's Link Sleuth 1.1c\nDisallow: /";
+        value = "# Block Xenu Crawler\nUser-agent: Xenu\nDisallow: /";
         break;
       case "advancedrobotstxtoptimizer_block_archive_org":
         value = "# Block archive.org bots\nUser-agent: ia_archiver\nDisallow: /\nUser-agent: archive.org_bot\nDisallow: /\nUser-agent: ia_archiver-web.archive.org\nDisallow: /";
@@ -131,7 +131,10 @@ function searchEngineCrawlers(id, value) {
   if (robotsTxt) {
     let robotsTxtValue = robotsTxt?.value || "";
     let allow, disallow;
-    
+    var uploadsDir = myScriptData.uploadsDir;
+    if (uploadsDir.charAt(uploadsDir.length-1) !== '/') {
+        uploadsDir += '/';
+    }
     switch (id) {
       case "advancedrobotstxtoptimizer_add_wp_default_robots":
         allow = "# Advanced Wordpress\nUser-agent: *\nAllow: /wp-admin/admin-ajax.php\nAllow: /*/*.css\nAllow: /*/*.js\nDisallow: /wp-admin/\nDisallow: /wp-includes/\nDisallow: /readme.html\nDisallow: /license.txt\nDisallow: /xmlrpc.php\nDisallow: /wp-login.php\nDisallow: /wp-register.php\nDisallow: *?attachment_id=";
@@ -142,8 +145,8 @@ function searchEngineCrawlers(id, value) {
         disallow = "# Block Google Bot\nUser-agent: Googlebot\nDisallow: /";
         break;
       case "advancedrobotstxtoptimizer_change_google_images":
-        allow = "# Allow Google Images Bot\nUser-agent: Googlebot-Image\nAllow: /wp-content/uploads/";
-        disallow = "# Block Google Images Bot\nUser-agent: Googlebot-Image\nDisallow: /wp-content/uploads/";
+        allow = "# Allow Google Images Bot\nUser-agent: Googlebot-Image\nAllow: " + uploadsDir;
+        disallow = "# Block Google Images Bot\nUser-agent: Googlebot-Image\nDisallow: " + uploadsDir;
         break;
       case "advancedrobotstxtoptimizer_change_google_media_partners":
         allow = "# Allow Google Media Partners Bot\nUser-agent: Mediapartners-Google\nAllow: /";
@@ -166,8 +169,8 @@ function searchEngineCrawlers(id, value) {
         disallow = "# Block MSN Bot\nUser-agent: Msnbot\nDisallow: /";
         break;
       case "advancedrobotstxtoptimizer_change_msn_bot_media":
-        allow = "# Allow MSNBot Media Bot\nUser-agent: msnbot-media\nAllow: /wp-content/uploads/";
-        disallow = "# Block MSNBot Media Bot\nUser-agent: msnbot-media\nDisallow: /wp-content/uploads/";
+        allow = "# Allow MSNBot Media Bot\nUser-agent: msnbot-media\nAllow: " + uploadsDir;
+        disallow = "# Block MSNBot Media Bot\nUser-agent: msnbot-media\nDisallow: " + uploadsDir;
         break;
       case "advancedrobotstxtoptimizer_change_apple_bot":
         allow = "# Allow Apple Bot\nUser-agent: Applebot\nAllow: /";
@@ -178,8 +181,8 @@ function searchEngineCrawlers(id, value) {
         disallow = "# Block Yandex Bot\nUser-agent: Yandex\nDisallow: /";
         break;
       case "advancedrobotstxtoptimizer_change_yandex_images":
-        allow = "# Allow Yandex Images Bot\nUser-agent: YandexImages\nAllow: /wp-content/uploads/";
-        disallow = "# Block Yandex Images Bot\nUser-agent: YandexImages\nDisallow: /wp-content/uploads/";
+        allow = "# Allow Yandex Images Bot\nUser-agent: YandexImages\nAllow: " + uploadsDir;
+        disallow = "# Block Yandex Images Bot\nUser-agent: YandexImages\nDisallow: " + uploadsDir;
         break;
       case "advancedrobotstxtoptimizer_change_yahoo_bot":
         allow = "# Allow Yahoo Search (Slurp bot)\nUser-agent: Slurp\nAllow: /";

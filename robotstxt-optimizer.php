@@ -16,7 +16,11 @@ function advancedrobotstxtoptimizer_styles() {
   {
     
     wp_enqueue_script( 'advancedrobotstxt', plugins_url( '/robotsoptimizer-java.js', __FILE__ ), array(), '1.0', true );
+    wp_localize_script( 'advancedrobotstxt', 'myScriptData', array(
+      'uploadsDir' => trailingslashit( parse_url( wp_upload_dir()['baseurl'], PHP_URL_PATH ) ),
+));
   }
   add_action('admin_enqueue_scripts', 'advancedrobotstxtoptimizer_scripts');
+  
 include_once(plugin_dir_path( __FILE__ ) . "/includes/robotsincludes.php");
 include_once(plugin_dir_path( __FILE__ ) . "/includes/robots-optimizer.php");

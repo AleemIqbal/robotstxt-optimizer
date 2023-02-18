@@ -14,5 +14,8 @@ function advancedrobotstxtoptimizer_settings()
 
 function update_advancedrobotstxtoptimizer_option_isset($name)
 {
-    update_option($name, isset($_POST[$name]));
+    if (isset($_POST[$name])) {
+        $value = sanitize_text_field($_POST[$name]);
+        update_option($name, $value);
+    }
 }

@@ -3,7 +3,22 @@
 function advancedrobotstxtoptimizer_settings_robots_page()
 {
   if (isset($_POST['submit'])) {
-    file_put_contents(ABSPATH . 'robots.txt', stripslashes($_POST['robotstxt']));
+    $robotstxt = trim($_POST['robotstxt']);
+
+        $robotstxt = stripslashes($robotstxt);
+ 
+
+    // Sanitize the input data
+    $robotstxt = filter_var($robotstxt, FILTER_SANITIZE_STRING);
+
+
+    // Validate the input data
+    if (strlen($robotstxt) > 100000) {
+        echo 'Error: The robots.txt file can be no more than 100000 characters long.';
+    } else {
+        file_put_contents(ABSPATH . 'robots.txt', $robotstxt);
+        echo 'The robots.txt file has been updated.';
+    }
     // Update the state of the checkbox in the database
     update_advancedrobotstxtoptimizer_option_isset("advancedrobotstxtoptimizer_remove_wp_json_api");
     update_advancedrobotstxtoptimizer_option_isset("advancedrobotstxtoptimizer_block_parameters");
@@ -33,40 +48,146 @@ function advancedrobotstxtoptimizer_settings_robots_page()
     update_advancedrobotstxtoptimizer_option_isset("advancedrobotstxtoptimizer_add_wp_default_sitemap");
     update_advancedrobotstxtoptimizer_option_isset("advancedrobotstxtoptimizer_add_news_sitemap");
 
-    if (isset($_POST['advancedrobotstxtoptimizer_add_wp_default_robots'])) update_option('advancedrobotstxtoptimizer_add_wp_default_robots', $_POST['advancedrobotstxtoptimizer_add_wp_default_robots']);
-    if (isset($_POST['advancedrobotstxtoptimizer_change_google_bot'])) update_option('advancedrobotstxtoptimizer_change_google_bot', $_POST['advancedrobotstxtoptimizer_change_google_bot']);
-    if (isset($_POST['advancedrobotstxtoptimizer_change_google_images']))  update_option('advancedrobotstxtoptimizer_change_google_images', ($_POST['advancedrobotstxtoptimizer_change_google_images']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_google_media_partners']))  update_option('advancedrobotstxtoptimizer_change_google_media_partners', ($_POST['advancedrobotstxtoptimizer_change_google_media_partners']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_google_adsbot']))  update_option('advancedrobotstxtoptimizer_change_google_adsbot', ($_POST['advancedrobotstxtoptimizer_change_google_adsbot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_google_mobile']))  update_option('advancedrobotstxtoptimizer_change_google_mobile', ($_POST['advancedrobotstxtoptimizer_change_google_mobile']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_bing_bot'])) update_option('advancedrobotstxtoptimizer_change_bing_bot', ($_POST['advancedrobotstxtoptimizer_change_bing_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_msn_bot']))  update_option('advancedrobotstxtoptimizer_change_msn_bot', ($_POST['advancedrobotstxtoptimizer_change_msn_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_msn_bot_media']))  update_option('advancedrobotstxtoptimizer_change_msn_bot_media', ($_POST['advancedrobotstxtoptimizer_change_msn_bot_media']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_apple_bot']))  update_option('advancedrobotstxtoptimizer_change_apple_bot', ($_POST['advancedrobotstxtoptimizer_change_apple_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_yandex_bot']))  update_option('advancedrobotstxtoptimizer_change_yandex_bot', ($_POST['advancedrobotstxtoptimizer_change_yandex_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_yandex_images']))  update_option('advancedrobotstxtoptimizer_change_yandex_images', ($_POST['advancedrobotstxtoptimizer_change_yandex_images']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_yahoo_bot']))  update_option('advancedrobotstxtoptimizer_change_yahoo_bot', ($_POST['advancedrobotstxtoptimizer_change_yahoo_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_duckduckgo_bot']))  update_option('advancedrobotstxtoptimizer_change_duckduckgo_bot', ($_POST['advancedrobotstxtoptimizer_change_duckduckgo_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_qwant_bot'])) update_option('advancedrobotstxtoptimizer_change_qwant_bot', ($_POST['advancedrobotstxtoptimizer_change_qwant_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_baidu_bot']))  update_option('advancedrobotstxtoptimizer_change_baidu_bot', ($_POST['advancedrobotstxtoptimizer_change_baidu_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_naver_bot']))  update_option('advancedrobotstxtoptimizer_change_naver_bot', ($_POST['advancedrobotstxtoptimizer_change_naver_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_seznam_bot']))  update_option('advancedrobotstxtoptimizer_change_seznam_bot', ($_POST['advancedrobotstxtoptimizer_change_seznam_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_facebook_bot']))  update_option('advancedrobotstxtoptimizer_change_facebook_bot', ($_POST['advancedrobotstxtoptimizer_change_facebook_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_instagram_bot']))  update_option('advancedrobotstxtoptimizer_change_instagram_bot', ($_POST['advancedrobotstxtoptimizer_change_instagram_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_whatsapp_bot']))  update_option('advancedrobotstxtoptimizer_change_whatsapp_bot', ($_POST['advancedrobotstxtoptimizer_change_whatsapp_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_telegram_bot']))  update_option('advancedrobotstxtoptimizer_change_telegram_bot', ($_POST['advancedrobotstxtoptimizer_change_telegram_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_twitter_bot']))  update_option('advancedrobotstxtoptimizer_change_twitter_bot', ($_POST['advancedrobotstxtoptimizer_change_twitter_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_linkedin_bot']))  update_option('advancedrobotstxtoptimizer_change_linkedin_bot', ($_POST['advancedrobotstxtoptimizer_change_linkedin_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_pinterest_bot']))  update_option('advancedrobotstxtoptimizer_change_pinterest_bot', ($_POST['advancedrobotstxtoptimizer_change_pinterest_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_discord_bot']))  update_option('advancedrobotstxtoptimizer_change_discord_bot', ($_POST['advancedrobotstxtoptimizer_change_discord_bot']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_webp']))  update_option('advancedrobotstxtoptimizer_change_webp', ($_POST['advancedrobotstxtoptimizer_change_webp']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_jpg']))  update_option('advancedrobotstxtoptimizer_change_jpg', ($_POST['advancedrobotstxtoptimizer_change_jpg']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_png']))  update_option('advancedrobotstxtoptimizer_change_png', ($_POST['advancedrobotstxtoptimizer_change_png']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_gif']))  update_option('advancedrobotstxtoptimizer_change_gif', ($_POST['advancedrobotstxtoptimizer_change_gif']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_pdf']))  update_option('advancedrobotstxtoptimizer_change_pdf', ($_POST['advancedrobotstxtoptimizer_change_pdf']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_docx']))  update_option('advancedrobotstxtoptimizer_change_docx', ($_POST['advancedrobotstxtoptimizer_change_docx']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_html']))  update_option('advancedrobotstxtoptimizer_change_html', ($_POST['advancedrobotstxtoptimizer_change_html']));
-    if (isset($_POST['advancedrobotstxtoptimizer_change_php']))  update_option('advancedrobotstxtoptimizer_change_php', ($_POST['advancedrobotstxtoptimizer_change_php']));
+    if (isset($_POST['advancedrobotstxtoptimizer_add_wp_default_robots'])) {
+      $default_robots = sanitize_text_field($_POST['advancedrobotstxtoptimizer_add_wp_default_robots']);
+      update_option('advancedrobotstxtoptimizer_add_wp_default_robots', $default_robots);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_google_bot'])) {
+      $google_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_google_bot']);
+      update_option('advancedrobotstxtoptimizer_change_google_bot', $google_bot);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_google_images'])) {
+      $google_images = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_google_images']);
+      update_option('advancedrobotstxtoptimizer_change_google_images', $google_images);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_google_media_partners'])) {
+      $google_media_partners = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_google_media_partners']);
+      update_option('advancedrobotstxtoptimizer_change_google_media_partners', $google_media_partners);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_google_adsbot'])) {
+      $google_adsbot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_google_adsbot']);
+      update_option('advancedrobotstxtoptimizer_change_google_adsbot', $google_adsbot);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_google_mobile'])) {
+      $google_mobile = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_google_mobile']);
+      update_option('advancedrobotstxtoptimizer_change_google_mobile', $google_mobile);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_bing_bot'])) {
+      $bing_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_bing_bot']);
+      update_option('advancedrobotstxtoptimizer_change_bing_bot', $bing_bot);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_msn_bot'])) {
+      $msn_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_msn_bot']);
+      update_option('advancedrobotstxtoptimizer_change_msn_bot', $msn_bot);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_msn_bot_media'])) {
+      $msn_bot_media = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_msn_bot_media']);
+      update_option('advancedrobotstxtoptimizer_change_msn_bot_media', $msn_bot_media);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_apple_bot'])) {
+      $apple_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_apple_bot']);
+      update_option('advancedrobotstxtoptimizer_change_apple_bot', $apple_bot);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_yandex_bot'])) {
+      $yandex_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_yandex_bot']);
+      update_option('advancedrobotstxtoptimizer_change_yandex_bot', $yandex_bot);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_yandex_images'])) {
+    $yandex_images = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_yandex_images']);
+    update_option('advancedrobotstxtoptimizer_change_yandex_images', $yandex_images);
+  }
+
+  if (isset($_POST['advancedrobotstxtoptimizer_change_yahoo_bot'])) {
+    $yahoo_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_yahoo_bot']);
+    update_option('advancedrobotstxtoptimizer_change_yahoo_bot', $yahoo_bot);
+  }
+
+  if (isset($_POST['advancedrobotstxtoptimizer_change_duckduckgo_bot'])) {
+    $duckduckgo_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_duckduckgo_bot']);
+    update_option('advancedrobotstxtoptimizer_change_duckduckgo_bot', $duckduckgo_bot);
+  }
+
+  if (isset($_POST['advancedrobotstxtoptimizer_change_qwant_bot'])) {
+    $qwant_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_qwant_bot']);
+    update_option('advancedrobotstxtoptimizer_change_qwant_bot', $qwant_bot);
+  }
+
+  if (isset($_POST['advancedrobotstxtoptimizer_change_baidu_bot'])) {
+    $baidu_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_baidu_bot']);
+    update_option('advancedrobotstxtoptimizer_change_baidu_bot', $baidu_bot);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_naver_bot'])) {
+    $naver_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_naver_bot']);
+    update_option('advancedrobotstxtoptimizer_change_naver_bot', $naver_bot);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_seznam_bot'])) {
+    $naver_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_seznam_bot']);
+    update_option('advancedrobotstxtoptimizer_change_seznam_bot', $naver_bot);
+  }
+  if (isset($_POST['advancedrobotstxtoptimizer_change_facebook_bot'])) {
+    $facebook_bot = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_facebook_bot']);
+    update_option('advancedrobotstxtoptimizer_change_facebook_bot', $facebook_bot);
+  }
+if (isset($_POST['advancedrobotstxtoptimizer_change_instagram_bot'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_instagram_bot']);
+  update_option('advancedrobotstxtoptimizer_change_instagram_bot', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_whatsapp_bot'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_whatsapp_bot']);
+  update_option('advancedrobotstxtoptimizer_change_whatsapp_bot', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_telegram_bot'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_telegram_bot']);
+  update_option('advancedrobotstxtoptimizer_change_telegram_bot', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_twitter_bot'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_twitter_bot']);
+  update_option('advancedrobotstxtoptimizer_change_twitter_bot', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_linkedin_bot'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_linkedin_bot']);
+  update_option('advancedrobotstxtoptimizer_change_linkedin_bot', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_pinterest_bot'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_pinterest_bot']);
+  update_option('advancedrobotstxtoptimizer_change_pinterest_bot', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_discord_bot'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_discord_bot']);
+  update_option('advancedrobotstxtoptimizer_change_discord_bot', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_webp'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_webp']);
+  update_option('advancedrobotstxtoptimizer_change_webp', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_jpg'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_jpg']);
+  update_option('advancedrobotstxtoptimizer_change_jpg', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_png'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_png']);
+  update_option('advancedrobotstxtoptimizer_change_png', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_gif'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_gif']);
+  update_option('advancedrobotstxtoptimizer_change_gif', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_pdf'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_pdf']);
+  update_option('advancedrobotstxtoptimizer_change_pdf', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_docx'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_docx']);
+  update_option('advancedrobotstxtoptimizer_change_docx', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_html'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_html']);
+  update_option('advancedrobotstxtoptimizer_change_html', $value);
+}
+if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
+  $value = sanitize_text_field($_POST['advancedrobotstxtoptimizer_change_php']);
+  update_option('advancedrobotstxtoptimizer_change_php', $value);
+}
   }
   $robotstxt = file_get_contents(ABSPATH . 'robots.txt');
   $advancedrobotstxtoptimizer_block_feed = get_option('advancedrobotstxtoptimizer_block_feed', false);
@@ -134,9 +255,9 @@ function advancedrobotstxtoptimizer_settings_robots_page()
 
   <div class="wrap advancedrobotstxtoptimizer robots-optimizaiton">
     <h1 class="advancedrobotstxtoptimizer-title">Robots.txt Optimization</h1>
-    <form method="post" action="">
+    <form method="post" action="" accept-charset="UTF-8">
       <div class="advancedrobotstxtoptimizer-box sticky-textarea">
-        <textarea id="robotstxt" name="robotstxt" dis><?= $robotstxt ?></textarea>
+      <textarea id="robotstxt" name="robotstxt" dis><?= esc_textarea( $robotstxt ) ?></textarea>
       </div>
       <div class="advancedrobotstxtoptimizer-box">
         <div class="advancedrobotstxtoptimizer-box__column">
@@ -173,11 +294,11 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                 <td>
                 <div class="advancedrobotstxtoptimizer-box__radio-btns">
                 <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_add_wp_default_robots" id="advancedrobotstxtoptimizer_add_wp_default_robots_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_add_wp_default_robots), true); ?> />
-                <label for="advancedrobotstxtoptimizer_add_wp_default_robots_1"><?php echo esc_html__('Advanced', 'text-domain'); ?></label>
+                <label for="advancedrobotstxtoptimizer_add_wp_default_robots_1"><?php echo esc_html__('Advanced', 'advanced-robots-txt-optimizer-editor'); ?></label>
                 <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_add_wp_default_robots" id="advancedrobotstxtoptimizer_add_wp_default_robots_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_add_wp_default_robots), true); ?> />
-                <label for="advancedrobotstxtoptimizer_add_wp_default_robots_2"><?php echo esc_html__('Basic', 'text-domain'); ?></label>
+                <label for="advancedrobotstxtoptimizer_add_wp_default_robots_2"><?php echo esc_html__('Basic', 'advanced-robots-txt-optimizer-editor'); ?></label>
                 <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_add_wp_default_robots" id="advancedrobotstxtoptimizer_add_wp_default_robots_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_add_wp_default_robots), true); ?> <?php echo (!$advancedrobotstxtoptimizer_add_wp_default_robots) ? 'checked' : '' ?> />
-                <label for="advancedrobotstxtoptimizer_add_wp_default_robots_3"><?php echo esc_html__('Disable', 'text-domain'); ?></label>
+                <label for="advancedrobotstxtoptimizer_add_wp_default_robots_3"><?php echo esc_html__('Disable', 'advanced-robots-txt-optimizer-editor'); ?></label>
               </div>
                 </td>
               </tr>
@@ -200,7 +321,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   <p>Prevent search engines from crawling the WordPress JSON API endpoints by adding a "disallow" rule to your robots.txt file for <code>/wp-json/</code> and <code>/?rest_route=</code>.</p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_remove_wp_json_api" id="advancedrobotstxtoptimizer_remove_wp_json_api" value="1" <?= (esc_attr( $advancedrobotstxtoptimizer_remove_wp_json_api) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_remove_wp_json_api" id="advancedrobotstxtoptimizer_remove_wp_json_api" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_remove_wp_json_api) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -208,7 +329,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   <p>Blocking search URLs, such as "/search/" and "/?s=", from being crawled by web crawlers in robots.txt helps to avoid having duplicate content indexed in search engines and reduces the load on the website's servers.</p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_prevent_internal_search_crawl" id="advancedrobotstxtoptimizer_prevent_internal_search_crawl" value="1" <?= (esc_attr( $prevent_internal_search_crawl) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_prevent_internal_search_crawl" id="advancedrobotstxtoptimizer_prevent_internal_search_crawl" value="1" <?php echo (esc_attr( $prevent_internal_search_crawl) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -223,7 +344,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_parameters" id="advancedrobotstxtoptimizer_block_parameters" value="1" <?= (esc_attr( $advancedrobotstxtoptimizer_block_parameters) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_block_parameters" id="advancedrobotstxtoptimizer_block_parameters" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_parameters) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -241,7 +362,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_feed" id="advancedrobotstxtoptimizer_block_feed" value="1" <?= (esc_attr( $advancedrobotstxtoptimizer_block_feed) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_block_feed" id="advancedrobotstxtoptimizer_block_feed" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_feed) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -259,7 +380,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_spam_directories" id="advancedrobotstxtoptimizer_block_spam_directories" value="1" <?= (esc_attr( $advancedrobotstxtoptimizer_block_spam_directories) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_block_spam_directories" id="advancedrobotstxtoptimizer_block_spam_directories" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_spam_directories) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -289,7 +410,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_archive_org" id="advancedrobotstxtoptimizer_block_archive_org" value="1" <?= (esc_attr( $advancedrobotstxtoptimizer_block_archive_org) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_block_archive_org" id="advancedrobotstxtoptimizer_block_archive_org" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_archive_org) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -301,7 +422,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_chatgpt" id="advancedrobotstxtoptimizer_block_chatgpt" value="1" <?= (esc_attr( $advancedrobotstxtoptimizer_block_chatgpt) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_block_chatgpt" id="advancedrobotstxtoptimizer_block_chatgpt" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_chatgpt) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -326,7 +447,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_cart_page" id="advancedrobotstxtoptimizer_block_cart_page" value="1" <?= (esc_attr( $advancedrobotstxtoptimizer_block_cart_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_block_cart_page" id="advancedrobotstxtoptimizer_block_cart_page" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_cart_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -338,7 +459,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_checkout_page" id="advancedrobotstxtoptimizer_block_checkout_page" value="1" <?= (esc_attr( $advancedrobotstxtoptimizer_block_checkout_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_block_checkout_page" id="advancedrobotstxtoptimizer_block_checkout_page" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_checkout_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -350,7 +471,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_myaccount_page" id="advancedrobotstxtoptimizer_block_myaccount_page" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_block_myaccount_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id'), this.checked)" />
+                <input type="checkbox" name="advancedrobotstxtoptimizer_block_myaccount_page" id="advancedrobotstxtoptimizer_block_myaccount_page" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_myaccount_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id'), this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -362,7 +483,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_login_page" id="advancedrobotstxtoptimizer_block_login_page" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_block_login_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_login_page" id="advancedrobotstxtoptimizer_block_login_page" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_login_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -385,7 +506,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_woocommerce_parameters" id="advancedrobotstxtoptimizer_block_woocommerce_parameters" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_block_woocommerce_parameters) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_woocommerce_parameters" id="advancedrobotstxtoptimizer_block_woocommerce_parameters" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_woocommerce_parameters) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -409,7 +530,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_yoast_sitemap" id="advancedrobotstxtoptimizer_add_yoast_sitemap" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_add_yoast_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_add_yoast_sitemap" id="advancedrobotstxtoptimizer_add_yoast_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_yoast_sitemap) ? 'checked' : ''); ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('seo-by-rank-math/rank-math.php')) { ?>
@@ -420,7 +541,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_rankmath_sitemap" id="advancedrobotstxtoptimizer_add_rankmath_sitemap" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_add_rankmath_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_rankmath_sitemap" id="advancedrobotstxtoptimizer_add_rankmath_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_rankmath_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('all-in-one-seo-pack/all_in_one_seo_pack.php')) { ?>
@@ -431,7 +552,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_aioseo_sitemap" id="advancedrobotstxtoptimizer_aioseo_sitemap" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_aioseo_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="advancedrobotstxtoptimizer_aioseo_sitemap" id="advancedrobotstxtoptimizer_aioseo_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_aioseo_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('squirrly-seo/squirrly.php')) { ?>
@@ -442,7 +563,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_squirrly_sitemap" id="advancedrobotstxtoptimizer_add_squirrly_sitemap" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_add_squirrly_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_squirrly_sitemap" id="advancedrobotstxtoptimizer_add_squirrly_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_squirrly_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('xml-sitemap-feed/xml-sitemap.php')) { ?>
@@ -453,7 +574,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap" id="advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap" id="advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('jetpack/jetpack.php')) { ?>
@@ -464,7 +585,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_jetpack_sitemap" id="advancedrobotstxtoptimizer_add_jetpack_sitemap" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_add_jetpack_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_jetpack_sitemap" id="advancedrobotstxtoptimizer_add_jetpack_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_jetpack_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
 
                   </td>
                 </tr>
@@ -477,7 +598,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_wp_default_sitemap" id="advancedrobotstxtoptimizer_add_wp_default_sitemap" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_add_wp_default_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_wp_default_sitemap" id="advancedrobotstxtoptimizer_add_wp_default_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_wp_default_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } ?>
@@ -490,7 +611,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_add_news_sitemap" id="advancedrobotstxtoptimizer_add_news_sitemap" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_add_news_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_add_news_sitemap" id="advancedrobotstxtoptimizer_add_news_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_news_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -502,7 +623,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_add_woocommerce_product_sitemap" id="advancedrobotstxtoptimizer_add_woocommerce_product_sitemap" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_add_woocommerce_product_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_add_woocommerce_product_sitemap" id="advancedrobotstxtoptimizer_add_woocommerce_product_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_woocommerce_product_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -526,7 +647,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_ahrefs_crawler" id="advancedrobotstxtoptimizer_block_ahrefs_crawler" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_block_ahrefs_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_ahrefs_crawler" id="advancedrobotstxtoptimizer_block_ahrefs_crawler" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_ahrefs_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -551,7 +672,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_semrush_crawler" id="advancedrobotstxtoptimizer_block_semrush_crawler" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_block_semrush_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_semrush_crawler" id="advancedrobotstxtoptimizer_block_semrush_crawler" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_semrush_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -563,7 +684,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_moz_crawler" id="advancedrobotstxtoptimizer_block_moz_crawler" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_block_moz_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_moz_crawler" id="advancedrobotstxtoptimizer_block_moz_crawler" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_moz_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -575,7 +696,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_majestic_crawler" id="advancedrobotstxtoptimizer_block_majestic_crawler" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_block_majestic_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_majestic_crawler" id="advancedrobotstxtoptimizer_block_majestic_crawler" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_majestic_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -583,14 +704,12 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   Block Xenu
                   <p>
                     Block the Xenu Crawler from accessing your website by adding the following to your robots.txt file:<br /><code>User-agent: Xenu<br />
-                      Disallow: /<br />
-                      User-agent: Xenu's Link Sleuth 1.1c<br />
                       Disallow: /
                       </code>
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_xenu" id="advancedrobotstxtoptimizer_block_xenu" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_block_xenu) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_xenu" id="advancedrobotstxtoptimizer_block_xenu" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_xenu) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -1242,7 +1361,7 @@ function advancedrobotstxtoptimizer_settings_robots_page()
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_scrappers" id="advancedrobotstxtoptimizer_block_scrappers" value="1" <?= (esc_attr($advancedrobotstxtoptimizer_block_scrappers) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_scrappers" id="advancedrobotstxtoptimizer_block_scrappers" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_scrappers) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
