@@ -2,11 +2,15 @@
 
 function advancedrobotstxtoptimizer_settings_robots_page()
 {
-  if (isset($_POST['submit'])) {
-    $robotstxt = trim($_POST['robotstxt']);
+  // Check if the user has the required permissions
+if ( ! current_user_can( 'manage_options' ) ) {
+  wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+  }
 
-        $robotstxt = stripslashes($robotstxt);
- 
+  // Check for nonce verification for POST requests
+ if ( isset( $_POST['submit'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'update_robots_settings' ) ) {
+    $robotstxt = isset( $_POST['robotstxt'] ) ? wp_kses_post( wp_unslash( $_POST['robotstxt'] ) ) : '';
+
 
     // Sanitize the input data
     $robotstxt = filter_var($robotstxt, FILTER_SANITIZE_STRING);
@@ -256,8 +260,9 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
   <div class="wrap advancedrobotstxtoptimizer robots-optimizaiton">
     <h1 class="advancedrobotstxtoptimizer-title">Robots.txt Optimization</h1>
     <form method="post" action="" accept-charset="UTF-8">
+    <?php wp_nonce_field( 'update_robots_settings' ); ?>
       <div class="advancedrobotstxtoptimizer-box sticky-textarea">
-      <textarea id="robotstxt" name="robotstxt" dis><?= esc_textarea( $robotstxt ) ?></textarea>
+      <textarea id="robotstxt" name="robotstxt" dis><?php echo esc_textarea( $robotstxt ) ?></textarea>
       </div>
       <div class="advancedrobotstxtoptimizer-box">
         <div class="advancedrobotstxtoptimizer-box__column">
@@ -293,11 +298,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                 <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_add_wp_default_robots" id="advancedrobotstxtoptimizer_add_wp_default_robots_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_add_wp_default_robots), true); ?> />
+                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_wp_default_robots' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_wp_default_robots_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_add_wp_default_robots), true); ?> />
                 <label for="advancedrobotstxtoptimizer_add_wp_default_robots_1"><?php echo esc_html__('Advanced', 'advanced-robots-txt-optimizer-editor'); ?></label>
-                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_add_wp_default_robots" id="advancedrobotstxtoptimizer_add_wp_default_robots_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_add_wp_default_robots), true); ?> />
+                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_wp_default_robots' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_wp_default_robots_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_add_wp_default_robots), true); ?> />
                 <label for="advancedrobotstxtoptimizer_add_wp_default_robots_2"><?php echo esc_html__('Basic', 'advanced-robots-txt-optimizer-editor'); ?></label>
-                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_add_wp_default_robots" id="advancedrobotstxtoptimizer_add_wp_default_robots_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_add_wp_default_robots), true); ?> <?php echo (!$advancedrobotstxtoptimizer_add_wp_default_robots) ? 'checked' : '' ?> />
+                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_wp_default_robots' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_wp_default_robots_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_add_wp_default_robots), true); ?> <?php echo (!$advancedrobotstxtoptimizer_add_wp_default_robots) ? 'checked' : '' ?> />
                 <label for="advancedrobotstxtoptimizer_add_wp_default_robots_3"><?php echo esc_html__('Disable', 'advanced-robots-txt-optimizer-editor'); ?></label>
               </div>
                 </td>
@@ -321,7 +326,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   <p>Prevent search engines from crawling the WordPress JSON API endpoints by adding a "disallow" rule to your robots.txt file for <code>/wp-json/</code> and <code>/?rest_route=</code>.</p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_remove_wp_json_api" id="advancedrobotstxtoptimizer_remove_wp_json_api" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_remove_wp_json_api) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_remove_wp_json_api' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_remove_wp_json_api' ); ?>" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_remove_wp_json_api) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -329,7 +334,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   <p>Blocking search URLs, such as "/search/" and "/?s=", from being crawled by web crawlers in robots.txt helps to avoid having duplicate content indexed in search engines and reduces the load on the website's servers.</p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_prevent_internal_search_crawl" id="advancedrobotstxtoptimizer_prevent_internal_search_crawl" value="1" <?php echo (esc_attr( $prevent_internal_search_crawl) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_prevent_internal_search_crawl' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_prevent_internal_search_crawl' ); ?>" value="1" <?php echo (esc_attr( $prevent_internal_search_crawl) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -344,7 +349,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_parameters" id="advancedrobotstxtoptimizer_block_parameters" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_parameters) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_parameters' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_parameters' ); ?>" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_parameters) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -362,7 +367,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_feed" id="advancedrobotstxtoptimizer_block_feed" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_feed) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_feed' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_feed' ); ?>" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_feed) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -380,7 +385,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_spam_directories" id="advancedrobotstxtoptimizer_block_spam_directories" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_spam_directories) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_spam_directories' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_spam_directories' ); ?>" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_spam_directories) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -410,7 +415,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_archive_org" id="advancedrobotstxtoptimizer_block_archive_org" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_archive_org) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_archive_org' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_archive_org' ); ?>" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_archive_org) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -422,7 +427,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_chatgpt" id="advancedrobotstxtoptimizer_block_chatgpt" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_chatgpt) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_chatgpt' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_chatgpt' ); ?>" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_chatgpt) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -447,7 +452,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_cart_page" id="advancedrobotstxtoptimizer_block_cart_page" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_cart_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_cart_page' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_cart_page' ); ?>" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_cart_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -459,7 +464,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_checkout_page" id="advancedrobotstxtoptimizer_block_checkout_page" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_checkout_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_checkout_page' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_checkout_page' ); ?>" value="1" <?php echo (esc_attr( $advancedrobotstxtoptimizer_block_checkout_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -471,7 +476,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                <input type="checkbox" name="advancedrobotstxtoptimizer_block_myaccount_page" id="advancedrobotstxtoptimizer_block_myaccount_page" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_myaccount_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id'), this.checked)" />
+                <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_myaccount_page' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_myaccount_page' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_myaccount_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id'), this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -483,7 +488,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_login_page" id="advancedrobotstxtoptimizer_block_login_page" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_login_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_login_page' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_login_page' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_login_page) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -506,7 +511,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_woocommerce_parameters" id="advancedrobotstxtoptimizer_block_woocommerce_parameters" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_woocommerce_parameters) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_woocommerce_parameters' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_woocommerce_parameters' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_woocommerce_parameters) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -526,66 +531,66 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 <tr>
                   <th scope="row">Add Yoast Sitemap Link
                     <p>Add the link to the Yoast Sitemap by adding the following line to your robots.txt file:<br>
-                      <code>Sitemap: https://<?= $_SERVER['HTTP_HOST'] ?>/sitemap_index.xml</code>
+                    <code>Sitemap: https://<?php echo esc_html( sanitize_text_field( $_SERVER['HTTP_HOST'] ) ); ?>/sitemap_index.xml</code>
                     </p>
                   </th>
                   <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_add_yoast_sitemap" id="advancedrobotstxtoptimizer_add_yoast_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_yoast_sitemap) ? 'checked' : ''); ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_yoast_sitemap' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_yoast_sitemap' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_yoast_sitemap) ? 'checked' : ''); ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('seo-by-rank-math/rank-math.php')) { ?>
                 <tr>
                   <th scope="row">Add RankMath Sitemap Link
                     <p>Add the link to the Sitemap by adding the following line to your robots.txt file:<br>
-                      <code>Sitemap: https://<?= $_SERVER['HTTP_HOST'] ?>/sitemap_index.xml</code>
+                    <code>Sitemap: https://<?php echo esc_html( sanitize_text_field( $_SERVER['HTTP_HOST'] ) ); ?>/sitemap_index.xml</code>
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_rankmath_sitemap" id="advancedrobotstxtoptimizer_add_rankmath_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_rankmath_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_rankmath_sitemap' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_rankmath_sitemap' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_rankmath_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('all-in-one-seo-pack/all_in_one_seo_pack.php')) { ?>
                 <tr>
                   <th scope="row">Add All in One SEO Sitemap Link
                     <p>Add the link to the Sitemap by adding the following line to your robots.txt file:<br>
-                      <code>Sitemap: https://<?= $_SERVER['HTTP_HOST'] ?>/sitemap.xml</code>
+                    <code>Sitemap: https://<?php echo esc_html( sanitize_text_field( $_SERVER['HTTP_HOST'] ) ); ?>/sitemap_index.xml</code>
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_aioseo_sitemap" id="advancedrobotstxtoptimizer_aioseo_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_aioseo_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="<?php echo esc_attr('advancedrobotstxtoptimizer_aioseo_sitemap'); ?>' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_aioseo_sitemap' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_aioseo_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('squirrly-seo/squirrly.php')) { ?>
                 <tr>
                   <th scope="row">Add Squirrly SEO Sitemap Link
                     <p>Add the link to the Squirrly SEO Sitemap by adding the following line to your robots.txt file:<br>
-                      <code>Sitemap: https://<?= $_SERVER['HTTP_HOST'] ?>/sitemap.xml</code>
+                    <code>Sitemap: https://<?php echo esc_html( sanitize_text_field( $_SERVER['HTTP_HOST'] ) ); ?>/sitemap_index.xml</code>
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_squirrly_sitemap" id="advancedrobotstxtoptimizer_add_squirrly_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_squirrly_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_squirrly_sitemap' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_squirrly_sitemap' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_squirrly_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('xml-sitemap-feed/xml-sitemap.php')) { ?>
                 <tr>
                   <th scope="row">Add XML Sitemap Link
                     <p>Add the link to the Sitemap by adding the following line to your robots.txt file:<br>
-                      <code>Sitemap: https://<?= $_SERVER['HTTP_HOST'] ?>/sitemap.xml</code>
+                    <code>Sitemap: https://<?php echo esc_html( sanitize_text_field( $_SERVER['HTTP_HOST'] ) ); ?>/sitemap_index.xml</code>
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap" id="advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } else if (is_plugin_active('jetpack/jetpack.php')) { ?>
                 <tr>
                   <th scope="row">Add Jetpack Sitemap Link
                     <p>Add the link to the Sitemap by adding the following line to your robots.txt file:<br>
-                      <code>Sitemap: https://<?= $_SERVER['HTTP_HOST'] ?>/sitemap.xml</code>
+                    <code>Sitemap: https://<?php echo esc_html( sanitize_text_field( $_SERVER['HTTP_HOST'] ) ); ?>/sitemap_index.xml</code>
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_jetpack_sitemap" id="advancedrobotstxtoptimizer_add_jetpack_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_jetpack_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_jetpack_sitemap' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_jetpack_sitemap' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_jetpack_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
 
                   </td>
                 </tr>
@@ -594,11 +599,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 <tr>
                   <th scope="row">Add Wordpress Default Sitemap Link
                     <p>Add the link to the Wordpress Default Sitemap by adding the following line to your robots.txt file:<br>
-                      <code>Sitemap: https://<?= $_SERVER['HTTP_HOST'] ?>/wp-sitemap.xml</code>
+                      <code>Sitemap: https://<?php echo esc_html( sanitize_text_field( $_SERVER['HTTP_HOST'] ) ); ?>/wp-sitemap.xml</code>
                     </p>
                   </th>
                   <td>
-                    <input type="checkbox" name="advancedrobotstxtoptimizer_add_wp_default_sitemap" id="advancedrobotstxtoptimizer_add_wp_default_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_wp_default_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                    <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_wp_default_sitemap' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_wp_default_sitemap' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_wp_default_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                   </td>
                 </tr>
               <? } ?>
@@ -607,11 +612,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   Add News Sitemap Link
                   <p>
                     Add the link to the News Sitemap by adding the following line to your robots.txt file:<br />
-                    <code>Sitemap: https://<?= $_SERVER['HTTP_HOST'] ?>/sitemap-news.xml</code>
+                    <code>Sitemap: https://<?php echo esc_html( sanitize_text_field( $_SERVER['HTTP_HOST'] ) ); ?>/sitemap-news.xml</code>
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_add_news_sitemap" id="advancedrobotstxtoptimizer_add_news_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_news_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_news_sitemap' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_news_sitemap' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_news_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -619,11 +624,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   Add Woocommerce Product Sitemap Link
                   <p>
                     Add the link to the Woocommerce product Sitemap by adding the following line to your robots.txt file:<br />
-                    <code>Sitemap: https://<?= $_SERVER['HTTP_HOST'] ?>/product-sitemap.xml</code>
+                    <code>Sitemap: https://<?php echo esc_html( sanitize_text_field( $_SERVER['HTTP_HOST'] ) ); ?>/product-sitemap.xml</code>
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_add_woocommerce_product_sitemap" id="advancedrobotstxtoptimizer_add_woocommerce_product_sitemap" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_woocommerce_product_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_woocommerce_product_sitemap' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_add_woocommerce_product_sitemap' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_add_woocommerce_product_sitemap) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -647,7 +652,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_ahrefs_crawler" id="advancedrobotstxtoptimizer_block_ahrefs_crawler" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_ahrefs_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_ahrefs_crawler' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_ahrefs_crawler' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_ahrefs_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -672,7 +677,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_semrush_crawler" id="advancedrobotstxtoptimizer_block_semrush_crawler" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_semrush_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_semrush_crawler' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_semrush_crawler' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_semrush_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -684,7 +689,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_moz_crawler" id="advancedrobotstxtoptimizer_block_moz_crawler" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_moz_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_moz_crawler' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_moz_crawler' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_moz_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -696,7 +701,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_majestic_crawler" id="advancedrobotstxtoptimizer_block_majestic_crawler" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_majestic_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_majestic_crawler' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_majestic_crawler' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_majestic_crawler) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
               <tr>
@@ -709,7 +714,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_xenu" id="advancedrobotstxtoptimizer_block_xenu" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_xenu) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_xenu' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_xenu' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_xenu) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>
@@ -733,11 +738,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                 <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_bot" id="advancedrobotstxtoptimizer_change_google_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_bot), true); ?> />
+                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_bot), true); ?> />
                 <label for="advancedrobotstxtoptimizer_change_google_bot_1">Allow</label>
-                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_bot" id="advancedrobotstxtoptimizer_change_google_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_bot), true); ?> />
+                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_bot), true); ?> />
                 <label for="advancedrobotstxtoptimizer_change_google_bot_2">Disallow</label>
-                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_bot" id="advancedrobotstxtoptimizer_change_google_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_bot), true); ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_bot) ? 'checked' : '' ?> />
+                <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_bot), true); ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_bot) ? 'checked' : '' ?> />
                 <label for="advancedrobotstxtoptimizer_change_google_bot_3">Disable</label>
               </div>
                 </td>
@@ -750,11 +755,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                 <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                  <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_images" id="advancedrobotstxtoptimizer_change_google_images_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_images), true); ?> />
+                  <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_images' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_images_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_images), true); ?> />
                   <label for="advancedrobotstxtoptimizer_change_google_images_1">Allow</label>
-                  <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_images" id="advancedrobotstxtoptimizer_change_google_images_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_images), true); ?> />
+                  <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_images' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_images_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_images), true); ?> />
                   <label for="advancedrobotstxtoptimizer_change_google_images_2">Disallow</label>
-                  <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_images" id="advancedrobotstxtoptimizer_change_google_images_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_images), true); ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_images) ? 'checked' : '' ?> />
+                  <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_images' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_images_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_images), true); ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_images) ? 'checked' : '' ?> />
                   <label for="advancedrobotstxtoptimizer_change_google_images_3">Disable</label>
                 </div>
               </td>
@@ -767,11 +772,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_media_partners" id="advancedrobotstxtoptimizer_change_google_media_partners_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_media_partners), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_media_partners' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_media_partners_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_media_partners), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_google_media_partners_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_media_partners" id="advancedrobotstxtoptimizer_change_google_media_partners_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_media_partners), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_media_partners' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_media_partners_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_media_partners), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_google_media_partners_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_media_partners" id="advancedrobotstxtoptimizer_change_google_media_partners_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_media_partners), true); ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_media_partners) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_media_partners' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_media_partners_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_media_partners), true); ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_media_partners) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_google_media_partners_3">Disable</label>
                   </div>
                 </td>
@@ -784,11 +789,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_adsbot" id="advancedrobotstxtoptimizer_change_google_adsbot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_adsbot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_adsbot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_adsbot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_adsbot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_google_adsbot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_adsbot" id="advancedrobotstxtoptimizer_change_google_adsbot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_adsbot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_adsbot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_adsbot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_adsbot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_google_adsbot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_adsbot" id="advancedrobotstxtoptimizer_change_google_adsbot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_adsbot), true); ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_adsbot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_adsbot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_adsbot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_adsbot), true); ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_adsbot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_google_adsbot_3">Disable</label>
                   </div>
                 </td>
@@ -801,11 +806,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_mobile" id="advancedrobotstxtoptimizer_change_google_mobile_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_mobile), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_mobile' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_mobile_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_google_mobile), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_google_mobile_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_mobile" id="advancedrobotstxtoptimizer_change_google_mobile_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_mobile), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_mobile' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_mobile_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_google_mobile), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_google_mobile_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_google_mobile" id="advancedrobotstxtoptimizer_change_google_mobile_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_mobile), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_mobile) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_mobile' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_google_mobile_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_google_mobile), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_google_mobile) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_google_mobile_3">Disable</label>
                   </div>
                 </td>
@@ -818,11 +823,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_bing_bot" id="advancedrobotstxtoptimizer_change_bing_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_bing_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_bing_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_bing_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_bing_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_bing_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_bing_bot" id="advancedrobotstxtoptimizer_change_bing_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_bing_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_bing_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_bing_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_bing_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_bing_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_bing_bot" id="advancedrobotstxtoptimizer_change_bing_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_bing_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_bing_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_bing_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_bing_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_bing_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_bing_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_bing_bot_3">Disable</label>
                   </div>
                 </td>
@@ -835,11 +840,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_msn_bot" id="advancedrobotstxtoptimizer_change_msn_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_msn_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_msn_bot" id="advancedrobotstxtoptimizer_change_msn_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_msn_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_msn_bot" id="advancedrobotstxtoptimizer_change_msn_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_msn_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_msn_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_msn_bot_3">Disable</label>
                   </div>
                 </td>
@@ -852,11 +857,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_msn_bot_media" id="advancedrobotstxtoptimizer_change_msn_bot_media_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot_media), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot_media' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot_media_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot_media), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_msn_bot_media_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_msn_bot_media" id="advancedrobotstxtoptimizer_change_msn_bot_media_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot_media), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot_media' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot_media_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot_media), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_msn_bot_media_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_msn_bot_media" id="advancedrobotstxtoptimizer_change_msn_bot_media_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot_media), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_msn_bot_media) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot_media' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_msn_bot_media_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_msn_bot_media), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_msn_bot_media) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_msn_bot_media_3">Disable</label>
                   </div>
                 </td>
@@ -869,11 +874,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_apple_bot" id="advancedrobotstxtoptimizer_change_apple_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_apple_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_apple_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_apple_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_apple_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_apple_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_apple_bot" id="advancedrobotstxtoptimizer_change_apple_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_apple_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_apple_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_apple_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_apple_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_apple_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_apple_bot" id="advancedrobotstxtoptimizer_change_apple_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_apple_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_apple_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_apple_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_apple_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_apple_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_apple_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_apple_bot_3">Disable</label>
                   </div>
                 </td>
@@ -886,11 +891,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_yandex_bot" id="advancedrobotstxtoptimizer_change_yandex_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_yandex_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_yandex_bot" id="advancedrobotstxtoptimizer_change_yandex_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_yandex_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_yandex_bot" id="advancedrobotstxtoptimizer_change_yandex_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_yandex_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_yandex_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_yandex_bot_3">Disable</label>
                   </div>
                 </td>
@@ -903,11 +908,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_yandex_images" id="advancedrobotstxtoptimizer_change_yandex_images_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_images), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_images' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_images_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_images), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_yandex_images_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_yandex_images" id="advancedrobotstxtoptimizer_change_yandex_images_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_images), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_images' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_images_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_images), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_yandex_images_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_yandex_images" id="advancedrobotstxtoptimizer_change_yandex_images_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_images), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_yandex_images) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_images' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yandex_images_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_yandex_images), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_yandex_images) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_yandex_images_3">Disable</label>
                   </div>
                 </td>
@@ -920,11 +925,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_yahoo_bot" id="advancedrobotstxtoptimizer_change_yahoo_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_yahoo_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yahoo_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yahoo_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_yahoo_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_yahoo_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_yahoo_bot" id="advancedrobotstxtoptimizer_change_yahoo_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_yahoo_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yahoo_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yahoo_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_yahoo_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_yahoo_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_yahoo_bot" id="advancedrobotstxtoptimizer_change_yahoo_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_yahoo_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_yahoo_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yahoo_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_yahoo_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_yahoo_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_yahoo_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_yahoo_bot_3">Disable</label>
                   </div>
                 </td>
@@ -937,11 +942,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_duckduckgo_bot" id="advancedrobotstxtoptimizer_change_duckduckgo_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_duckduckgo_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_duckduckgo_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_duckduckgo_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_duckduckgo_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_duckduckgo_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_duckduckgo_bot" id="advancedrobotstxtoptimizer_change_duckduckgo_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_duckduckgo_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_duckduckgo_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_duckduckgo_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_duckduckgo_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_duckduckgo_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_duckduckgo_bot" id="advancedrobotstxtoptimizer_change_duckduckgo_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_duckduckgo_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_duckduckgo_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_duckduckgo_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_duckduckgo_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_duckduckgo_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_duckduckgo_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_duckduckgo_bot_3">Disable</label>
                   </div>
                 </td>
@@ -954,11 +959,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_qwant_bot" id="advancedrobotstxtoptimizer_change_qwant_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_qwant_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_qwant_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_qwant_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_qwant_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_qwant_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_qwant_bot" id="advancedrobotstxtoptimizer_change_qwant_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_qwant_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_qwant_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_qwant_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_qwant_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_qwant_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_qwant_bot" id="advancedrobotstxtoptimizer_change_qwant_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_qwant_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_qwant_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_qwant_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_qwant_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_qwant_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_qwant_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_qwant_bot_3">Disable</label>
                   </div>
                 </td>
@@ -971,11 +976,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_baidu_bot" id="advancedrobotstxtoptimizer_change_baidu_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_baidu_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_baidu_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_baidu_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_baidu_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_baidu_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_baidu_bot" id="advancedrobotstxtoptimizer_change_baidu_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_baidu_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_baidu_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_baidu_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_baidu_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_baidu_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_baidu_bot" id="advancedrobotstxtoptimizer_change_baidu_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_baidu_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_baidu_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_baidu_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_baidu_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_baidu_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_baidu_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_baidu_bot_3">Disable</label>
                   </div>
                 </td>
@@ -988,11 +993,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_naver_bot" id="advancedrobotstxtoptimizer_change_naver_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_naver_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_naver_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_naver_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_naver_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_naver_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_naver_bot" id="advancedrobotstxtoptimizer_change_naver_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_naver_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_naver_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_naver_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_naver_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_naver_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_naver_bot" id="advancedrobotstxtoptimizer_change_naver_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_naver_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_naver_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_naver_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_naver_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_naver_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_naver_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_naver_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1005,11 +1010,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_seznam_bot" id="advancedrobotstxtoptimizer_change_seznam_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_seznam_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_seznam_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_seznam_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_seznam_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_seznam_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_seznam_bot" id="advancedrobotstxtoptimizer_change_seznam_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_seznam_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_seznam_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_seznam_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_seznam_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_seznam_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_seznam_bot" id="advancedrobotstxtoptimizer_change_seznam_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_seznam_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_seznam_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_seznam_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_seznam_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_seznam_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_seznam_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_seznam_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1037,11 +1042,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_facebook_bot" id="advancedrobotstxtoptimizer_change_facebook_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_facebook_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_facebook_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_facebook_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_facebook_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_facebook_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_facebook_bot" id="advancedrobotstxtoptimizer_change_facebook_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_facebook_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_facebook_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_facebook_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_facebook_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_facebook_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_facebook_bot" id="advancedrobotstxtoptimizer_change_facebook_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_facebook_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_facebook_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_facebook_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_facebook_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_facebook_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_facebook_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_facebook_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1055,11 +1060,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_instagram_bot" id="advancedrobotstxtoptimizer_change_instagram_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_instagram_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_instagram_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_instagram_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_instagram_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_instagram_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_instagram_bot" id="advancedrobotstxtoptimizer_change_instagram_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_instagram_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_instagram_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_instagram_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_instagram_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_instagram_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_instagram_bot" id="advancedrobotstxtoptimizer_change_instagram_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_instagram_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_instagram_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_instagram_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_instagram_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_instagram_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_instagram_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_instagram_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1073,11 +1078,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_whatsapp_bot" id="advancedrobotstxtoptimizer_change_whatsapp_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_whatsapp_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_whatsapp_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_whatsapp_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_whatsapp_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_whatsapp_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_whatsapp_bot" id="advancedrobotstxtoptimizer_change_whatsapp_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_whatsapp_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_whatsapp_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_whatsapp_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_whatsapp_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_whatsapp_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_whatsapp_bot" id="advancedrobotstxtoptimizer_change_whatsapp_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_whatsapp_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_whatsapp_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_whatsapp_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_whatsapp_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_whatsapp_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_whatsapp_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_whatsapp_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1091,11 +1096,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_telegram_bot" id="advancedrobotstxtoptimizer_change_telegram_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_telegram_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_telegram_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_telegram_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_telegram_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_telegram_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_telegram_bot" id="advancedrobotstxtoptimizer_change_telegram_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_telegram_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_telegram_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_telegram_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_telegram_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_telegram_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_telegram_bot" id="advancedrobotstxtoptimizer_change_telegram_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_telegram_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_telegram_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_telegram_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_telegram_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_telegram_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_telegram_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_telegram_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1109,11 +1114,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_twitter_bot" id="advancedrobotstxtoptimizer_change_twitter_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_twitter_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_twitter_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_twitter_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_twitter_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_twitter_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_twitter_bot" id="advancedrobotstxtoptimizer_change_twitter_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_twitter_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_twitter_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_twitter_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_twitter_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_twitter_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_twitter_bot" id="advancedrobotstxtoptimizer_change_twitter_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_twitter_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_twitter_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_twitter_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_twitter_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_twitter_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_twitter_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_twitter_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1127,11 +1132,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_linkedin_bot" id="advancedrobotstxtoptimizer_change_linkedin_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_linkedin_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_linkedin_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_linkedin_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_linkedin_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_linkedin_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_linkedin_bot" id="advancedrobotstxtoptimizer_change_linkedin_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_linkedin_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_linkedin_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_linkedin_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_linkedin_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_linkedin_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_linkedin_bot" id="advancedrobotstxtoptimizer_change_linkedin_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_linkedin_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_linkedin_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_linkedin_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_linkedin_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_linkedin_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_linkedin_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_linkedin_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1145,11 +1150,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_pinterest_bot" id="advancedrobotstxtoptimizer_change_pinterest_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_pinterest_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pinterest_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pinterest_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_pinterest_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_pinterest_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_pinterest_bot" id="advancedrobotstxtoptimizer_change_pinterest_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_pinterest_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pinterest_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pinterest_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_pinterest_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_pinterest_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_pinterest_bot" id="advancedrobotstxtoptimizer_change_pinterest_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_pinterest_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_pinterest_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pinterest_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pinterest_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_pinterest_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_pinterest_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_pinterest_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1163,11 +1168,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_discord_bot" id="advancedrobotstxtoptimizer_change_discord_bot_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_discord_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_discord_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_discord_bot_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_discord_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_discord_bot_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_discord_bot" id="advancedrobotstxtoptimizer_change_discord_bot_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_discord_bot), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_discord_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_discord_bot_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_discord_bot), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_discord_bot_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_discord_bot" id="advancedrobotstxtoptimizer_change_discord_bot_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_discord_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_discord_bot) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_discord_bot' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_discord_bot_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_discord_bot), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_discord_bot) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_discord_bot_3">Disable</label>
                   </div>
                 </td>
@@ -1194,11 +1199,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_webp" id="advancedrobotstxtoptimizer_change_webp_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_webp), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_webp' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_webp_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_webp), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_webp_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_webp" id="advancedrobotstxtoptimizer_change_webp_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_webp), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_webp' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_webp_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_webp), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_webp_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_webp" id="advancedrobotstxtoptimizer_change_webp_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_webp), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_webp) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_webp' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_webp_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_webp), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_webp) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_webp_3">Disable</label>
                   </div>
                 </td>
@@ -1212,11 +1217,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_jpg" id="advancedrobotstxtoptimizer_change_jpg_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_jpg), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_jpg' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_jpg_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_jpg), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_jpg_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_jpg" id="advancedrobotstxtoptimizer_change_jpg_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_jpg), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_jpg' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_jpg_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_jpg), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_jpg_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_jpg" id="advancedrobotstxtoptimizer_change_jpg_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_jpg), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_jpg) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_jpg' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_jpg_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_jpg), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_jpg) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_jpg_3">Disable</label>
                   </div>
                 </td>
@@ -1230,11 +1235,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_png" id="advancedrobotstxtoptimizer_change_png_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_png), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_png' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_png_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_png), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_png_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_png" id="advancedrobotstxtoptimizer_change_png_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_png), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_png' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_png_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_png), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_png_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_png" id="advancedrobotstxtoptimizer_change_png_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_png), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_png) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_png' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_png_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_png), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_png) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_png_3">Disable</label>
                   </div>
                 </td>
@@ -1248,11 +1253,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_gif" id="advancedrobotstxtoptimizer_change_gif_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_gif), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_gif' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_gif_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_gif), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_gif_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_gif" id="advancedrobotstxtoptimizer_change_gif_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_gif), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_gif' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_gif_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_gif), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_gif_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_gif" id="advancedrobotstxtoptimizer_change_gif_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_gif), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_gif) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_gif' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_gif_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_gif), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_gif) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_gif_3">Disable</label>
                   </div>
                 </td>
@@ -1278,11 +1283,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_pdf" id="advancedrobotstxtoptimizer_change_pdf_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_pdf), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pdf' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pdf_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_pdf), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_pdf_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_pdf" id="advancedrobotstxtoptimizer_change_pdf_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_pdf), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pdf' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pdf_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_pdf), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_pdf_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_pdf" id="advancedrobotstxtoptimizer_change_pdf_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_pdf), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_pdf) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pdf' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_pdf_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_pdf), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_pdf) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_pdf_3">Disable</label>
                   </div>
                 </td>
@@ -1296,11 +1301,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_docx" id="advancedrobotstxtoptimizer_change_docx_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_docx), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_docx' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_docx_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_docx), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_docx_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_docx" id="advancedrobotstxtoptimizer_change_docx_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_docx), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_docx' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_docx_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_docx), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_docx_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_docx" id="advancedrobotstxtoptimizer_change_docx_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_docx), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_docx) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_docx' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_docx_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_docx), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_docx) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_docx_3">Disable</label>
                   </div>
                 </td>
@@ -1314,11 +1319,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_html" id="advancedrobotstxtoptimizer_change_html_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_html), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_html' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_html_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_html), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_html_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_html" id="advancedrobotstxtoptimizer_change_html_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_html), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_html' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_html_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_html), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_html_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_html" id="advancedrobotstxtoptimizer_change_html_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_html), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_html) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_html' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_html_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_html), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_html) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_html_3">Disable</label>
                   </div>
                 </td>
@@ -1332,11 +1337,11 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                 </th>
                 <td>
                   <div class="advancedrobotstxtoptimizer-box__radio-btns">
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_php" id="advancedrobotstxtoptimizer_change_php_1" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_php), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_php' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_php_1' ); ?>" value="1" <?php checked(1, sanitize_text_field($advancedrobotstxtoptimizer_change_php), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_php_1">Allow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_php" id="advancedrobotstxtoptimizer_change_php_2" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_php), true); ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_php' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_php_2' ); ?>" value="2" <?php checked(2, sanitize_text_field($advancedrobotstxtoptimizer_change_php), true); ?> />
                     <label for="advancedrobotstxtoptimizer_change_php_2">Disallow</label>
-                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="advancedrobotstxtoptimizer_change_php" id="advancedrobotstxtoptimizer_change_php_3" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_php), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_php) ? 'checked' : '' ?> />
+                    <input type="radio" onclick="searchEngineCrawlers(this.getAttribute('name'),this.getAttribute('value'))" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_php' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_change_php_3' ); ?>" value="3" <?php checked(3, sanitize_text_field($advancedrobotstxtoptimizer_change_php), true) ?> <?php echo (!$advancedrobotstxtoptimizer_change_php) ? 'checked' : '' ?> />
                     <label for="advancedrobotstxtoptimizer_change_php_3">Disable</label>
                   </div>
                 </td>
@@ -1361,7 +1366,7 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
                   </p>
                 </th>
                 <td>
-                  <input type="checkbox" name="advancedrobotstxtoptimizer_block_scrappers" id="advancedrobotstxtoptimizer_block_scrappers" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_scrappers) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
+                  <input type="checkbox" name="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_scrappers' ); ?>" id="<?php echo esc_attr( 'advancedrobotstxtoptimizer_block_scrappers' ); ?>" value="1" <?php echo (esc_attr($advancedrobotstxtoptimizer_block_scrappers) ? ' checked' : '') ?> onclick="change_robots_text(this.getAttribute('id') , this.checked)" />
                 </td>
               </tr>
             </tbody>

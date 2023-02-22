@@ -21,6 +21,6 @@ function advancedrobotstxtoptimizer_styles() {
 ));
   }
   add_action('admin_enqueue_scripts', 'advancedrobotstxtoptimizer_scripts');
-  
+ 
 include_once(plugin_dir_path( __FILE__ ) . "/includes/robotsincludes.php");
 include_once(plugin_dir_path( __FILE__ ) . "/includes/robots-optimizer.php");
