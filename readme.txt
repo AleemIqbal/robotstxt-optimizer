@@ -4,7 +4,7 @@ Tags: Advanced Robots.txt Editor,Robots.txt Editor,Advanced Robots.txt Optimizer
 Requires at least: 4.3
 Tested up to: 6.1.1
 Requires PHP: 5.2.4
-Stable tag: 1.0
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,52 @@ Finally, the plugin provides an option to add sitemap links to the Robots.txt fi
 
 The plugin also provides an option to block SEO tool crawlers, such as Ahrefs, Semrush, Majestic, and others, from accessing your website, which improves website security, privacy, and protects website resources.
 
+== Screenshots ==
+1. The First Section screenshot-1.jpg
+2. The Second Section screenshot-2.jpg
+3. The Third and 4th Section screenshot-3.jpg
+4. The 5th and 6th Section screenshot-4.jpg
+5. 7th Section screenshot-5.jpg
+6. Other Half of 7th Section screenshot-6.jpg
+7. Social Media Crawlers screenshot-7.jpg
+8. Images and Files Crawlability Section screenshot-8.jpg
+9. Block Bad Bots screenshot-9.jpg
+
+== Features ==
+* Edit, optimize, and customize your website's Robots.txt file to fit your specific needs.
+* Protect the backend of your website by blocking search engines and web crawlers from accessing the WordPress administration panel.
+* Allow dynamic functionality by crawling the admin-ajax.php file for AJAX requests to the server.
+* Block duplicate content by blocking specific URLs, which prioritizes high-quality, unique content on your website, improving your SEO and visibility in search results.
+* Prevent the crawling of WordPress JSON API endpoints and search URLs, such as "/search/" and "/?s=" to save crawl budget.
+* Improve website security and protect website resources by blocking feed directories, spam directories, and WayBackMachine crawler.
+* Block ChatGPT from using your website content.
+* Optimize your WooCommerce website by blocking Cart, Checkout, My Account, and Login pages from indexation, as well as blocking WooCommerce parameters to avoid duplicate content issues.
+* Add sitemap links to the Robots.txt file for quick and efficient crawling and indexing of site content.
+* Add Yoast Sitemap Link, News Sitemap Link, and WooCommerce Product Sitemap Link to the Robots.txt file.
+* Block SEO tool crawlers, such as Ahrefs, Semrush, Majestic, and others, from accessing your website for improved website security, privacy, and protection of website resources.
+
+== Need any Help? ==
+* Please email us at aleemiqbalbhatti@gmail.com
+* We provide live support
+
+== Changelog ==
+
+== V 1.0.0 ==
+* Initial release at 02/24/2023
+
+== V 1.1.0 ==
+* Color Scheme Changed,Added option to reset,Default now shows at start
+
+== V 1.2.0 ==
+* Options not saving bug fixed,Robots.txt bugs fixed
+
+== Upgrade Notice ==
+
+= 1.1 =
+Color Scheme Changed,Added option to reset,Default now shows at start
+
+= V 1.2 =
+Options not saving bug fixed,Robots.txt bugs fixed
 
 == Installation ==
 

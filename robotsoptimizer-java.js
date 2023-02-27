@@ -139,6 +139,10 @@ function searchEngineCrawlers(id, value) {
       case "advancedrobotstxtoptimizer_add_wp_default_robots":
         allow = "# Advanced Wordpress\nUser-agent: *\nAllow: /wp-admin/admin-ajax.php\nAllow: /*/*.css\nAllow: /*/*.js\nDisallow: /wp-admin/\nDisallow: /wp-includes/\nDisallow: /readme.html\nDisallow: /license.txt\nDisallow: /xmlrpc.php\nDisallow: /wp-login.php\nDisallow: /wp-register.php\nDisallow: *?attachment_id=";
         disallow = "# Wordpress Default\nUser-agent: *\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php";
+        if (robotsTxtValue.indexOf(allow) !== -1) {
+          robotsTxtValue = robotsTxtValue.replace(allow, "");
+        }
+        robotsTxtValue = allow + "\n" + robotsTxtValue;
         break;        
       case "advancedrobotstxtoptimizer_change_google_bot":
         allow = "# Allow Google Bot\nUser-agent: Googlebot\nAllow: /";
@@ -274,10 +278,19 @@ function searchEngineCrawlers(id, value) {
         break;
     }
     robotsTxtValue = robotsTxtValue.replace(allow, "").replace(disallow, "");
+    
+    if (id === 'advancedrobotstxtoptimizer_add_wp_default_robots') {
+  if (value === '1') {
+    robotsTxtValue = allow + '\n\n' + robotsTxtValue;
+  } else if (value === '2') {
+    robotsTxtValue = disallow + '\n\n' + robotsTxtValue;
+  }
+}
 
-    if (value === "1") robotsTxtValue += "\n\n" + allow;
+if (id !== 'advancedrobotstxtoptimizer_add_wp_default_robots') {
+      if (value === "1") robotsTxtValue += "\n\n" + allow;
     if (value === "2") robotsTxtValue += "\n\n" + disallow;
-
+}
     robotsTxt.value = robotsTxtValue
       .split(/\n{3,}/g)
       .join("\n\n")

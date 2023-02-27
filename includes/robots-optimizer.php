@@ -9,20 +9,10 @@ if ( ! current_user_can( 'manage_options' ) ) {
 
   // Check for nonce verification for POST requests
  if ( isset( $_POST['submit'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'update_robots_settings' ) ) {
-    $robotstxt = isset( $_POST['robotstxt'] ) ? wp_kses_post( wp_unslash( $_POST['robotstxt'] ) ) : '';
+  $robotstxt = sanitize_textarea_field( stripslashes($_POST['robotstxt']) );
+  file_put_contents( ABSPATH . 'robots.txt', $robotstxt );
 
 
-    // Sanitize the input data
-    $robotstxt = filter_var($robotstxt, FILTER_SANITIZE_STRING);
-
-
-    // Validate the input data
-    if (strlen($robotstxt) > 100000) {
-        echo 'Error: The robots.txt file can be no more than 100000 characters long.';
-    } else {
-        file_put_contents(ABSPATH . 'robots.txt', $robotstxt);
-        echo 'The robots.txt file has been updated.';
-    }
     // Update the state of the checkbox in the database
     update_advancedrobotstxtoptimizer_option_isset("advancedrobotstxtoptimizer_remove_wp_json_api");
     update_advancedrobotstxtoptimizer_option_isset("advancedrobotstxtoptimizer_block_parameters");
@@ -263,7 +253,14 @@ if (isset($_POST['advancedrobotstxtoptimizer_change_php'])) {
     <?php wp_nonce_field( 'update_robots_settings' ); ?>
       <div class="advancedrobotstxtoptimizer-box sticky-textarea">
       <textarea id="robotstxt" name="robotstxt" dis><?php echo esc_textarea( $robotstxt ) ?></textarea>
+      <div class="advancedrobotstxtoptimizer-box">
+        <div class="advancedrobotstxtoptimizer-box__column">
+          <p style="color:white;background:red;">Note: We recommend that if you are creating it for the first time, then clear your existing robots.txt file and create a new one from scratch using the options given below.</p>
+        <button type="button" onclick="document.getElementById('robotstxt').value='';">Clear</button>
+</div>
+</div>
       </div>
+      
       <div class="advancedrobotstxtoptimizer-box">
         <div class="advancedrobotstxtoptimizer-box__column">
           <h3>Add Wordpress Default Robots.txt</h3>
