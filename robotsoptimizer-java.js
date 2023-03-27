@@ -13,7 +13,113 @@ window.addEventListener("scroll", () => {
     elementTarget1?.classList.remove("fixed");
   }
 });
+function uncheckadvancedrobotsCheckboxes() {
+  // List of all checkboxes and radio buttons
+  const elements = [
+    'advancedrobotstxtoptimizer_block_feed',
+'advancedrobotstxtoptimizer_remove_wp_json_api',
+'advancedrobotstxtoptimizer_block_parameters',
+'advancedrobotstxtoptimizer_block_spam_directories',
+'advancedrobotstxtoptimizer_prevent_internal_search_crawl',
+'advancedrobotstxtoptimizer_block_ahrefs_crawler',
+'advancedrobotstxtoptimizer_block_semrush_crawler',
+'advancedrobotstxtoptimizer_block_moz_crawler',
+'advancedrobotstxtoptimizer_block_majestic_crawler',
+'advancedrobotstxtoptimizer_block_archive_org',
+'advancedrobotstxtoptimizer_block_chatgpt',
+'advancedrobotstxtoptimizer_block_cart_page',
+'advancedrobotstxtoptimizer_block_checkout_page',
+'advancedrobotstxtoptimizer_block_myaccount_page',
+'advancedrobotstxtoptimizer_block_login_page',
+'advancedrobotstxtoptimizer_block_woocommerce_parameters',
+'advancedrobotstxtoptimizer_add_woocommerce_product_sitemap',
+'advancedrobotstxtoptimizer_block_xenu',
+'advancedrobotstxtoptimizer_block_scrappers'
+  ];
 
+  // Uncheck all checkboxes and radio buttons
+  for (const elementId of elements) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.checked = false;
+    }
+  }
+
+  var elementIds = [
+    'advancedrobotstxtoptimizer_add_wp_default_robots_3',
+    'advancedrobotstxtoptimizer_change_google_bot_3',
+    'advancedrobotstxtoptimizer_change_google_images_3',
+    'advancedrobotstxtoptimizer_change_google_media_partners_3',
+    'advancedrobotstxtoptimizer_change_google_adsbot_3',
+    'advancedrobotstxtoptimizer_change_google_mobile_3',
+    'advancedrobotstxtoptimizer_change_bing_bot_3',
+    'advancedrobotstxtoptimizer_change_msn_bot_3',
+    'advancedrobotstxtoptimizer_change_msn_bot_media_3',
+    'advancedrobotstxtoptimizer_change_apple_bot_3',
+    'advancedrobotstxtoptimizer_change_yandex_bot_3',
+    'advancedrobotstxtoptimizer_change_yandex_images_3',
+    'advancedrobotstxtoptimizer_change_yahoo_bot_3',
+    'advancedrobotstxtoptimizer_change_duckduckgo_bot_3',
+    'advancedrobotstxtoptimizer_change_qwant_bot_3',
+    'advancedrobotstxtoptimizer_change_baidu_bot_3',
+    'advancedrobotstxtoptimizer_change_naver_bot_3',
+    'advancedrobotstxtoptimizer_change_seznam_bot_3',
+    'advancedrobotstxtoptimizer_change_facebook_bot_3',
+    'advancedrobotstxtoptimizer_change_instagram_bot_3',
+    'advancedrobotstxtoptimizer_change_whatsapp_bot_3',
+    'advancedrobotstxtoptimizer_change_telegram_bot_3',
+    'advancedrobotstxtoptimizer_change_twitter_bot_3',
+    'advancedrobotstxtoptimizer_change_linkedin_bot_3',
+    'advancedrobotstxtoptimizer_change_pinterest_bot_3',
+    'advancedrobotstxtoptimizer_change_discord_bot_3',
+    'advancedrobotstxtoptimizer_change_webp_3',
+    'advancedrobotstxtoptimizer_change_jpg_3',
+    'advancedrobotstxtoptimizer_change_png_3',
+    'advancedrobotstxtoptimizer_change_gif_3',
+    'advancedrobotstxtoptimizer_change_pdf_3',
+    'advancedrobotstxtoptimizer_change_docx_3',
+    'advancedrobotstxtoptimizer_change_html_3',
+    'advancedrobotstxtoptimizer_change_php_3'
+  ];
+  
+  elementIds.forEach(function (id) {
+    var element = document.getElementById(id);
+    element.setAttribute('checked', 'true');
+  });
+
+  // List of sitemap elements
+  const sitemapElements = [
+    'advancedrobotstxtoptimizer_add_news_sitemap',
+    'advancedrobotstxtoptimizer_add_woocommerce_product_sitemap'
+  ];
+
+  // Uncheck all sitemap elements
+  for (const sitemapElementId of sitemapElements) {
+    const sitemapElement = document.getElementById(sitemapElementId);
+    if (sitemapElement) {
+      sitemapElement.checked = false;
+    }
+  }
+  function uncheckElementById(id) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.checked = false;
+    }
+  }
+  
+  const sitemapelementIds = [
+    'advancedrobotstxtoptimizer_add_yoast_sitemap',
+    'advancedrobotstxtoptimizer_add_rankmath_sitemap',
+    'advancedrobotstxtoptimizer_aioseo_sitemap',
+    'advancedrobotstxtoptimizer_add_squirrly_sitemap',
+    'advancedrobotstxtoptimizer_add_xml_sitemaps_sitemap',
+    'advancedrobotstxtoptimizer_add_jetpack_sitemap',
+    'advancedrobotstxtoptimizer_add_wp_sitemap'
+  ];
+  
+  sitemapelementIds.forEach(uncheckElementById);
+
+}
 function change_robots_text(type, checked) {
   const robotsTxt = document.getElementById("robotstxt");
 
@@ -139,10 +245,6 @@ function searchEngineCrawlers(id, value) {
       case "advancedrobotstxtoptimizer_add_wp_default_robots":
         allow = "# Advanced Wordpress\nUser-agent: *\nAllow: /wp-admin/admin-ajax.php\nAllow: /*/*.css\nAllow: /*/*.js\nDisallow: /wp-admin/\nDisallow: /wp-includes/\nDisallow: /readme.html\nDisallow: /license.txt\nDisallow: /xmlrpc.php\nDisallow: /wp-login.php\nDisallow: /wp-register.php\nDisallow: *?attachment_id=";
         disallow = "# Wordpress Default\nUser-agent: *\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php";
-        if (robotsTxtValue.indexOf(allow) !== -1) {
-          robotsTxtValue = robotsTxtValue.replace(allow, "");
-        }
-        robotsTxtValue = allow + "\n" + robotsTxtValue;
         break;        
       case "advancedrobotstxtoptimizer_change_google_bot":
         allow = "# Allow Google Bot\nUser-agent: Googlebot\nAllow: /";
@@ -278,19 +380,10 @@ function searchEngineCrawlers(id, value) {
         break;
     }
     robotsTxtValue = robotsTxtValue.replace(allow, "").replace(disallow, "");
-    
-    if (id === 'advancedrobotstxtoptimizer_add_wp_default_robots') {
-  if (value === '1') {
-    robotsTxtValue = allow + '\n\n' + robotsTxtValue;
-  } else if (value === '2') {
-    robotsTxtValue = disallow + '\n\n' + robotsTxtValue;
-  }
-}
 
-if (id !== 'advancedrobotstxtoptimizer_add_wp_default_robots') {
-      if (value === "1") robotsTxtValue += "\n\n" + allow;
+    if (value === "1") robotsTxtValue += "\n\n" + allow;
     if (value === "2") robotsTxtValue += "\n\n" + disallow;
-}
+
     robotsTxt.value = robotsTxtValue
       .split(/\n{3,}/g)
       .join("\n\n")

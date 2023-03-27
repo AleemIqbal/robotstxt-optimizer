@@ -3,7 +3,7 @@
 Plugin Name: Advanced Robots.txt Optimizer & Editor
 Plugin URI: https://www.bigtechies.com/
 Description: The "Advanced Robots.txt Optimizer & Editor" WordPress plugin enhances website functionality, SEO and traffic management by allowing users to customize the Robots.txt file with various features to block search engines, prevent crawling of duplicate content, optimize WooCommerce, add sitemap links, and block SEO tool crawlers to protect website resources, security and privacy.
-Version: 1.2
+Version: 1.5
 Author: Big Techies
 Author URI: https://www.bigtechies.com/robotstxt-optimizer-plugin/
 */
@@ -39,5 +39,25 @@ function advancedrobotstxtoptimizer_styles() {
       );
       return $links;
   }
+
+  function createRadioButtonGroup($options, $inputName, $optionKey, $buttonData, $hiddenInput = false) {
+    $name = esc_attr($inputName);
+    $opt_value = sanitize_text_field($options[$inputName]);
+
+    if ($hiddenInput) {
+        echo "<input type='hidden' name='{$name}' value='0' />";
+    }
+
+    echo '<div class="advancedrobotstxtoptimizer-box__radio-btns">';
+    foreach ($buttonData as $id => $data) {
+        $checked = checked($data['value'], $opt_value, false);
+        if (isset($data['default']) && $data['default'] && !$options[$inputName]) {
+            $checked = 'checked="checked"';
+        }
+        echo "<input type='radio' onclick='searchEngineCrawlers(this.getAttribute(\"name\"),this.getAttribute(\"value\"))' name='{$name}' id='{$id}' value='{$data['value']}' {$checked} />
+        <label for='{$id}'>" . esc_html__($data['label'], 'advanced-robots-txt-optimizer-editor') . "</label>";
+    }
+    echo '</div>';
+}
 include_once(plugin_dir_path( __FILE__ ) . "/includes/robotsincludes.php");
 include_once(plugin_dir_path( __FILE__ ) . "/includes/robots-optimizer.php");
